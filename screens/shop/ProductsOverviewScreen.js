@@ -7,6 +7,8 @@ import {
 import { StatusBar } from 'expo-status-bar'
 import { useSelector } from 'react-redux'
 
+import ProductItem from '../../components/shop/ProductItem'
+
 function ProductsOverviewScreen(props) {
 
   const products = useSelector(state => state.products.availableProducts)
@@ -16,7 +18,17 @@ function ProductsOverviewScreen(props) {
       <StatusBar style="light" />
       <FlatList
         data={products}
-        renderItem={itemData => { }}
+        renderItem={itemData => {
+          return (
+            <ProductItem
+              image={itemData.item.imageUrl}
+              title={itemData.item.title}
+              price={itemData.item.price}
+              onViewDetail={() => { }}
+              onAddToCart={() => { }}
+            />
+          )
+        }}
       />
     </View>
   )

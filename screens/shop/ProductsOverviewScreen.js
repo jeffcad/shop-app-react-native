@@ -2,30 +2,37 @@ import React from 'react'
 import {
   View,
   FlatList,
-  StyleSheet
+  Platform
 } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
 import ProductItem from '../../components/shop/ProductItem'
+import * as CartActions from '../../store/actions/cart'
+import CustomHeaderButton from '../../components/UI/HeaderButton'
 
 function ProductsOverviewScreen(props) {
 
   const products = useSelector(state => state.products.availableProducts)
 
+  const dispatch = useDispatch()
+
   return (
     <View>
-      <StatusBar style="light" />
+      <StatusBar style='light' />
       <FlatList
         data={products}
         renderItem={itemData => {
           return (
             <ProductItem
-              image={itemData.item.imageUrl}
-              title={itemData.item.title}
-              price={itemData.item.price}
-              onViewDetail={() => { }}
-              onAddToCart={() => { }}
+              product={itemData.item}
+              onViewDetail={() => props.navigation.navigate('ProductDetail',
+                {
+                  product: itemData.item
+                }
+              )}
+              onAddToCart={() => dispatch(CartActions.addToCart(itemData.item))}
             />
           )
         }}
@@ -34,12 +41,18 @@ function ProductsOverviewScreen(props) {
   )
 }
 
-ProductsOverviewScreen.navigationOptions = {
-  headerTitle: 'All Products'
+ProductsOverviewScreen.navigationOptions = (navData) => {
+  return {
+    headerTitle: 'All Products',
+    headerRight: () =>
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title='Cart'
+          iconName={Platform.OS === 'ios' ? 'ios-cart' : 'md-cart'}
+          onPress={() => navData.navigation.navigate('Cart')}
+        />
+      </HeaderButtons>
+  }
 }
-
-const styles = StyleSheet.create({
-
-})
 
 export default ProductsOverviewScreen

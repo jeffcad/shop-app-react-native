@@ -33,8 +33,7 @@ const cartReducer = (state = initialState, action) => {
       }
 
       return {
-        // ...state not needed if below items are the entire state
-        // ...state,
+        ...state,
         items: {
           ...state.items,
           [addedProduct.key]: updatedOrNewCartItem
@@ -63,6 +62,7 @@ const cartReducer = (state = initialState, action) => {
       }
 
       return {
+        ...state,
         items: updatedCartItems,
         totalAmount: Math.abs(state.totalAmount - selectedCartItem.productPrice)
       }
@@ -77,6 +77,7 @@ const cartReducer = (state = initialState, action) => {
       const itemTotal = state.items[action.productId].sum
       delete updatedItems[action.productId]
       return {
+        ...state,
         items: updatedItems,
         totalAmount: Math.abs(state.totalAmount - itemTotal)
       }

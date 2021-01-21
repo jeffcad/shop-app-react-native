@@ -15,6 +15,7 @@ const ordersReducer = (state = initialState, action) => {
         new Date()
       )
       return {
+        ...state,
         orders: state.orders.concat(newOrder)
       }
     default:

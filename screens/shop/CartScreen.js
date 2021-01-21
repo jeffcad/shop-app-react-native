@@ -6,10 +6,12 @@ import {
   FlatList,
   StyleSheet
 } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import Colors from '../../constants/Colors'
 import CartItem from '../../components/shop/CartItem'
+import * as CartActions from '../../store/actions/cart'
+import * as OrdersActions from '../../store/actions/orders'
 
 function CartScreen(props) {
 
@@ -25,8 +27,12 @@ function CartScreen(props) {
         sum: state.cart.items[key].sum
       })
     }
-    return transformedCartItems
+    // The sort here was added to prevent the products from changing order when reducing quantities in the cart screen
+    return transformedCartItems.sort((a, b) =>
+      a.productId > b.productId ? 1 : -1)
   })
+
+  const dispatch = useDispatch()
 
   return (
     <View style={styles.screen}>
@@ -39,8 +45,8 @@ function CartScreen(props) {
         <Button
           title="Order Now"
           color={Colors.accent}
-          onPress={() => { }}
-          disabled={cartTotalAmount === 0}
+          onPress={() => dispatch(OrdersActions.addOrder(cartItems, cartTotalAmount))}
+          disabled={cartTotalAmount.toFixed(2) === '0.00'}
         />
       </View>
       <FlatList
@@ -49,7 +55,10 @@ function CartScreen(props) {
         renderItem={itemData =>
           <CartItem
             product={itemData.item}
-            onRemove={() => { }}
+            deletable={true}
+            onRemove={() =>
+              dispatch(CartActions.removeFromCart(itemData.item.productId))
+            }
           />
         }
       />
@@ -64,7 +73,6 @@ CartScreen.navigationOptions = {
 const styles = StyleSheet.create({
   screen: {
     margin: 20
-
   },
   summary: {
     flexDirection: 'row',

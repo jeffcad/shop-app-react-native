@@ -19,16 +19,19 @@ function CartItem(props) {
       {/* </View> */}
       {/* <View style={styles.itemData}> */}
       <Text style={styles.amount}>${props.product.sum.toFixed(2)}</Text>
-      <TouchableOpacity
-        onPress={props.onRemove}
-        style={styles.deleteButton}
-      >
-        <Ionicons
-          name={Platform.OS === 'ios' ? 'ios-trash' : 'md-trash'}
-          size={23}
-          color='coral'
-        />
-      </TouchableOpacity>
+      {props.deletable ?
+        <TouchableOpacity
+          onPress={props.onRemove}
+          style={styles.deleteButton}
+        >
+          <Ionicons
+            name={Platform.OS === 'ios' ? 'ios-trash' : 'md-trash'}
+            size={23}
+            color='coral'
+          />
+        </TouchableOpacity>
+        : null
+      }
       {/* </View> */}
     </View >
   )

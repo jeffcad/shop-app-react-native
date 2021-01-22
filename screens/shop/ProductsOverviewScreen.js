@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   View,
   FlatList,
@@ -12,6 +12,7 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
 import ProductItem from '../../components/shop/ProductItem'
 import * as CartActions from '../../store/actions/cart'
+import * as ProductsActions from '../../store/actions/products'
 import CustomHeaderButton from '../../components/UI/HeaderButton'
 import Colors from '../../constants/Colors'
 
@@ -20,6 +21,10 @@ function ProductsOverviewScreen(props) {
   const products = useSelector(state => state.products.availableProducts)
 
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(ProductsActions.fetchProducts())
+  }, [dispatch])
 
   const selectItemHandler = (item) => {
     props.navigation.navigate('ProductDetail', { product: item })

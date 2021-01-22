@@ -8,36 +8,56 @@ export const SET_PRODUCTS = 'SET_PRODUCTS'
 
 export const fetchProducts = () => {
   return async (dispatch) => {
-    const response = await fetch(BASE_URL + 'products.json')
-    const resData = await response.json()
-    const loadedProducts = []
-    for (const key in resData) {
-      loadedProducts.push(new Product(
-        key,
-        'u1',
-        resData[key].title,
-        resData[key].imageUrl,
-        resData[key].description,
-        resData[key].price
-      ))
+    try {
+      const response = await fetch(`${BASE_URL}products.json`)
+
+      if (!response.ok) {
+        throw new Error('Something went wrong!')
+      }
+
+      const resData = await response.json()
+      const loadedProducts = []
+      for (const key in resData) {
+        loadedProducts.push(new Product(
+          key,
+          'u1',
+          resData[key].title,
+          resData[key].imageUrl,
+          resData[key].description,
+          resData[key].price
+        ))
+      }
+      dispatch({
+        type: SET_PRODUCTS,
+        products: loadedProducts
+      })
+    } catch (err) {
+      throw err
     }
-    dispatch({
-      type: SET_PRODUCTS,
-      products: loadedProducts
-    })
   }
 }
 
 export const deleteProduct = (productId) => {
-  return {
-    type: DELETE_PRODUCT,
-    productId
+  return async (dispatch) => {
+
+    const response = await fetch(`${BASE_URL}products/${productId}.json`, {
+      method: 'DELETE',
+    })
+
+    if (!response.ok) {
+      throw new Error('Oops, something went wrong with updating the product.')
+    }
+
+    dispatch({
+      type: DELETE_PRODUCT,
+      productId
+    })
   }
 }
 
 export const createProduct = (title, imageUrl, description, price) => {
   return async (dispatch) => {
-    const response = await fetch(BASE_URL + 'products.json', {
+    const response = await fetch(`${BASE_URL}products.json`, {
       method: 'POST',
       header: {
         'Content-Type': 'application/json'
@@ -65,13 +85,31 @@ export const createProduct = (title, imageUrl, description, price) => {
 }
 
 export const updateProduct = (id, title, imageUrl, description) => {
-  return {
-    type: UPDATE_PRODUCT,
-    productData: {
-      id,
-      title,
-      imageUrl,
-      description
+  return async (dispatch) => {
+    const response = await fetch(`${BASE_URL}products/${id}.json`, {
+      method: 'PATCH',
+      header: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        imageUrl
+      })
+    })
+
+    if (!response.ok) {
+      throw new Error('Oops, something went wrong with updating the product.')
     }
+
+    dispatch({
+      type: UPDATE_PRODUCT,
+      productData: {
+        id,
+        title,
+        imageUrl,
+        description
+      }
+    })
   }
 }

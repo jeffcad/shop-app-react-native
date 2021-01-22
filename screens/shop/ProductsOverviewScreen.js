@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   View,
+  Text,
   FlatList,
   Button,
   StyleSheet,
-  Platform
+  Platform,
+  ActivityIndicator
 } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { useSelector, useDispatch } from 'react-redux'
@@ -18,22 +20,85 @@ import Colors from '../../constants/Colors'
 
 function ProductsOverviewScreen(props) {
 
+  const [isLoading, setIsLoading] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [error, setError] = useState()
   const products = useSelector(state => state.products.availableProducts)
-
   const dispatch = useDispatch()
 
+  const loadProducts = useCallback(async () => {
+    setError(null)
+    setIsRefreshing(true)
+    try {
+      await dispatch(ProductsActions.fetchProducts())
+    } catch (err) {
+      setError(err.message)
+    }
+    setIsRefreshing(false)
+  }, [dispatch, setError, setIsRefreshing])
+
+  // This listener reloads the products whenever this screen is brought back into focus, so we always have most up-to-date product data instead of what was in memory
   useEffect(() => {
-    dispatch(ProductsActions.fetchProducts())
-  }, [dispatch])
+    const willFocusSub = props.navigation.addListener('willFocus', loadProducts)
+    return () => {
+      willFocusSub.remove()
+    }
+  }, [loadProducts])
+
+  // This call of useEffect seems redundant because of above one, but above one won't fire on first rendering, so this is needed for 1st render
+  useEffect(() => {
+    setIsLoading(true)
+    loadProducts()
+      .then(() => setIsLoading(false))
+  }, [loadProducts, setIsLoading])
 
   const selectItemHandler = (item) => {
     props.navigation.navigate('ProductDetail', { product: item })
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text>
+          Oops, there was an error getting the products from the server!
+        </Text>
+        <Button
+          title='Try again'
+          onPress={loadProducts}
+          color={Colors.primary}
+        />
+      </View>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <StatusBar style='light' />
+        <ActivityIndicator
+          size='large'
+          color={Colors.primary}
+        />
+      </View>
+    )
+  }
+
+  if (!isLoading && products.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <StatusBar style='light' />
+        <Text>No products found.</Text>
+      </View>
+    )
   }
 
   return (
     <View>
       <StatusBar style='light' />
       <FlatList
+        // The next 2 props are for pull-to-refresh
+        onRefresh={loadProducts}
+        refreshing={isRefreshing}
         data={products}
         renderItem={itemData => {
           return (
@@ -63,12 +128,6 @@ function ProductsOverviewScreen(props) {
   )
 }
 
-const styles = StyleSheet.create({
-  button: {
-    width: 110
-  }
-})
-
 ProductsOverviewScreen.navigationOptions = (navData) => {
   return {
     headerTitle: 'All Products',
@@ -90,5 +149,17 @@ ProductsOverviewScreen.navigationOptions = (navData) => {
       </HeaderButtons>
   }
 }
+
+const styles = StyleSheet.create({
+  button: {
+    width: 110
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 30
+  }
+})
 
 export default ProductsOverviewScreen

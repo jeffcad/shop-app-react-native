@@ -74,7 +74,7 @@ function ProductsOverviewScreen(props) {
   if (isLoading) {
     return (
       <View style={styles.centered}>
-        <StatusBar style='light' />
+        {/* <StatusBar style='light' /> */}
         <ActivityIndicator
           size='large'
           color={Colors.primary}
@@ -86,7 +86,7 @@ function ProductsOverviewScreen(props) {
   if (!isLoading && products.length === 0) {
     return (
       <View style={styles.centered}>
-        <StatusBar style='light' />
+        {/* <StatusBar style='light' /> */}
         <Text>No products found.</Text>
       </View>
     )
@@ -94,7 +94,7 @@ function ProductsOverviewScreen(props) {
 
   return (
     <View>
-      <StatusBar style='light' />
+      {/* <StatusBar style='light' /> */}
       <FlatList
         // The next 2 props are for pull-to-refresh
         onRefresh={loadProducts}

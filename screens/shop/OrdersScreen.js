@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {
   View,
+  Text,
   FlatList,
   Platform,
   ActivityIndicator,
@@ -38,6 +39,14 @@ function OrdersScreen(props) {
     )
   }
 
+  if (orders.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.message}>You have no orders yet. Why not make some?</Text>
+      </View>
+    )
+  }
+
   return (
     <FlatList
       data={orders}
@@ -64,7 +73,12 @@ const styles = StyleSheet.create({
   centered: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingHorizontal: 30
+  },
+  message: {
+    fontFamily: 'open-sans',
+    fontSize: 20
   }
 })
 

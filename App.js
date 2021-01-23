@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { StatusBar } from 'react-native'
 import {
   createStore,
   combineReducers,
@@ -12,18 +13,21 @@ import ReduxThunk from 'redux-thunk'
 // Delete this from here and store creation below before publishing!
 import { composeWithDevTools } from 'redux-devtools-extension'
 
-import ShopNavigator from './navigation/ShopNavigator'
+// import ShopNavigator from './navigation/ShopNavigator'
+import NavigationContainer from './navigation/NavigationContainer'
+import Colors from './constants/Colors'
 
 // Reducers
 import productsReducer from './store/reducers/products'
 import cartReducer from './store/reducers/cart'
 import ordersReducer from './store/reducers/orders'
-
+import authReducer from './store/reducers/auth'
 
 const rootReducer = combineReducers({
   products: productsReducer,
   cart: cartReducer,
-  orders: ordersReducer
+  orders: ordersReducer,
+  auth: authReducer
 })
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(ReduxThunk)))
@@ -48,7 +52,8 @@ function App() {
 
   return (
     <Provider store={store}>
-      <ShopNavigator />
+      <StatusBar barStyle='light-content' backgroundColor={Colors.primary} />
+      <NavigationContainer />
     </Provider>
   )
 }

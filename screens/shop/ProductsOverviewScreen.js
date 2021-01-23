@@ -8,7 +8,6 @@ import {
   Platform,
   ActivityIndicator
 } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
 import { useSelector, useDispatch } from 'react-redux'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
@@ -74,7 +73,6 @@ function ProductsOverviewScreen(props) {
   if (isLoading) {
     return (
       <View style={styles.centered}>
-        {/* <StatusBar style='light' /> */}
         <ActivityIndicator
           size='large'
           color={Colors.primary}
@@ -86,7 +84,6 @@ function ProductsOverviewScreen(props) {
   if (!isLoading && products.length === 0) {
     return (
       <View style={styles.centered}>
-        {/* <StatusBar style='light' /> */}
         <Text>No products found.</Text>
       </View>
     )
@@ -94,7 +91,6 @@ function ProductsOverviewScreen(props) {
 
   return (
     <View>
-      {/* <StatusBar style='light' /> */}
       <FlatList
         // The next 2 props are for pull-to-refresh
         onRefresh={loadProducts}

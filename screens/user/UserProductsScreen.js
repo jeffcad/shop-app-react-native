@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   View,
+  Text,
   Button,
   FlatList,
   StyleSheet,
@@ -43,6 +44,14 @@ function UserProductsScreen(props) {
       ])
   }
 
+  if (userProducts.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.message}>You have no products yet. Why not make some?</Text>
+      </View>
+    )
+  }
+
   return (
     <FlatList
       data={userProducts}
@@ -74,6 +83,16 @@ function UserProductsScreen(props) {
 const styles = StyleSheet.create({
   button: {
     width: 110
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 30
+  },
+  message: {
+    fontFamily: 'open-sans',
+    fontSize: 20
   }
 })
 

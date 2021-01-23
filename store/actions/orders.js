@@ -5,9 +5,10 @@ export const ADD_ORDER = 'ADD_ORDER'
 export const SET_ORDERS = 'SET_ORDERS'
 
 export const fetchOrders = () => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const userId = getState().auth.userId
     try {
-      const response = await fetch(`${BASE_URL}orders/u1.json`)
+      const response = await fetch(`${BASE_URL}orders/${userId}.json`)
 
       if (!response.ok) {
         throw new Error('Oops, something went wrong!')
@@ -34,8 +35,10 @@ export const fetchOrders = () => {
 }
 export const addOrder = (cartItems, totalAmount) => {
   const date = new Date().toISOString()
-  return async (dispatch) => {
-    const response = await fetch(`${BASE_URL}orders/u1.json`, {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token
+    const userId = getState().auth.userId
+    const response = await fetch(`${BASE_URL}orders/${userId}.json?auth=${token}`, {
       method: 'POST',
       header: {
         'Content-Type': 'application/json'

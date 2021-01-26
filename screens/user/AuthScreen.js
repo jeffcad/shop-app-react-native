@@ -89,7 +89,7 @@ function AuthScreen(props) {
         formState.inputValues.password
       ))
       setIsLoading(false)
-      props.navigation.navigate('Shop')
+      // props.navigation.navigate('Shop')
     } catch (err) {
       setError(err)
       setIsLoading(false)
@@ -159,7 +159,7 @@ function AuthScreen(props) {
   )
 }
 
-AuthScreen.navigationOptions = {
+export const screenOptions = {
   headerTitle: 'Login or Sign Up'
 }
 

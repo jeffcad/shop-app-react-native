@@ -16,7 +16,7 @@ import CustomHeaderButton from '../../components/UI/HeaderButton'
 
 function ProductDetailScreen(props) {
 
-  const selectedProduct = props.navigation.getParam('product')
+  const selectedProduct = props.route.params.product
 
   const dispatch = useDispatch()
 
@@ -39,9 +39,9 @@ function ProductDetailScreen(props) {
   )
 }
 
-ProductDetailScreen.navigationOptions = (navData) => {
+export const screenOptions = (navData) => {
   return {
-    headerTitle: navData.navigation.getParam('product').title,
+    headerTitle: navData.route.params.product.title,
     headerRight: () =>
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item

@@ -14,7 +14,7 @@ import ReduxThunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
 // import ShopNavigator from './navigation/ShopNavigator'
-import NavigationContainer from './navigation/NavigationContainer'
+import AppNavigator from './navigation/AppNavigator'
 import Colors from './constants/Colors'
 
 // Reducers
@@ -53,7 +53,7 @@ function App() {
   return (
     <Provider store={store}>
       <StatusBar barStyle='light-content' backgroundColor={Colors.primary} />
-      <NavigationContainer />
+      <AppNavigator />
     </Provider>
   )
 }

@@ -80,23 +80,7 @@ function UserProductsScreen(props) {
   )
 }
 
-const styles = StyleSheet.create({
-  button: {
-    width: 110
-  },
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 30
-  },
-  message: {
-    fontFamily: 'open-sans',
-    fontSize: 20
-  }
-})
-
-UserProductsScreen.navigationOptions = (navData) => {
+export const screenOptions = (navData) => {
   return {
     headerTitle: 'Your Products',
     headerLeft: () =>
@@ -117,5 +101,21 @@ UserProductsScreen.navigationOptions = (navData) => {
       </HeaderButtons>
   }
 }
+
+const styles = StyleSheet.create({
+  button: {
+    width: 110
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 30
+  },
+  message: {
+    fontFamily: 'open-sans',
+    fontSize: 20
+  }
+})
 
 export default UserProductsScreen

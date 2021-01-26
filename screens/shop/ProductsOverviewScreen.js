@@ -38,9 +38,9 @@ function ProductsOverviewScreen(props) {
 
   // This listener reloads the products whenever this screen is brought back into focus, so we always have most up-to-date product data instead of what was in memory
   useEffect(() => {
-    const willFocusSub = props.navigation.addListener('willFocus', loadProducts)
+    const unsubscribe = props.navigation.addListener('focus', loadProducts)
     return () => {
-      willFocusSub.remove()
+      unsubscribe()
     }
   }, [loadProducts])
 
@@ -124,7 +124,7 @@ function ProductsOverviewScreen(props) {
   )
 }
 
-ProductsOverviewScreen.navigationOptions = (navData) => {
+export const screenOptions = (navData) => {
   return {
     headerTitle: 'All Products',
     headerLeft: () =>

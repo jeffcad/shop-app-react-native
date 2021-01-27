@@ -55,7 +55,6 @@ export const addOrder = (cartItems, totalAmount) => {
     }
 
     const resData = await response.json()
-
     dispatch({
       type: ADD_ORDER,
       orderData: {
@@ -65,5 +64,26 @@ export const addOrder = (cartItems, totalAmount) => {
         date
       }
     })
+
+    // Would normally do this on a server, but don't have one here
+    for (const cartItem of cartItems) {
+      const pushToken = cartItem.productPushToken
+      fetch('https://exp.host/--/api/v2/push/send',
+        {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Accept-Encoding': 'gzip, deflate',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            to: pushToken,
+            title: 'Order was received!',
+            body: cartItem.productTitle
+          })
+        }
+      )
+    }
+
   }
 }
